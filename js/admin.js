@@ -1,15 +1,36 @@
 import { db } from "./firebase.js";
 import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-document.getElementById("teste").addEventListener("click", async () => {
-  try {
-    await addDoc(collection(db, "teste"), {
-      mensagem: "Firebase conectado com sucesso!",
-      data: new Date()
-    });
+async function carregarMaterias() {
+  const res = await fetch("../db/materias.json");
+  return res.json();
+}
 
-    alert("Firebase conectado com sucesso!");
-  } catch (erro) {
-    alert("Erro ao conectar: " + erro.message);
+function gerarQuestaoFake(materia, assunto) {
+  return {
+    materia,
+    assunto,
+    enunciado: `Questão sobre ${assunto} (${materia})`,
+    alternativas: [
+      "Alternativa A",
+      "Alternativa B",
+      "Alternativa C",
+      "Alternativa D"
+    ],
+    correta: "A"
+  };
+}
+
+document.getElementById("gerar").addEventListener("click", async () => {
+  const materias = await carregarMaterias();
+
+  for (const materia in materias) {
+    for (const assunto of materias[materia]) {
+      const questao = gerarQuestaoFake(materia, assunto);
+
+      await addDoc(collection(db, "questoes"), questao);
+    }
   }
+
+  alert("Questões geradas no banco!");
 });
