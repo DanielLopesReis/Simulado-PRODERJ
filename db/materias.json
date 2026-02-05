@@ -1,0 +1,29 @@
+{
+  "portugues": [
+    "Interpretação de textos",
+    "Ortografia oficial",
+    "Acentuação gráfica",
+    "Classes gramaticais",
+    "Concordância verbal e nominal",
+    "Regência verbal e nominal",
+    "Crase",
+    "Pontuação"
+  ],
+  "raciocinio_logico": [
+    "Proposições",
+    "Conectivos lógicos",
+    "Tabela verdade",
+    "Equivalência e negação",
+    "Problemas lógicos",
+    "Porcentagem e razão"
+  ],
+  "informatica": [
+    "Hardware e periféricos",
+    "Windows 10 e 11",
+    "Microsoft Office",
+    "Redes TCP/IP, DNS, DHCP",
+    "Segurança da informação",
+    "Internet e navegadores",
+    "Correio eletrônico"
+  ]
+}
