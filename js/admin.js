@@ -2,7 +2,7 @@ import { db } from "./firebase.js";
 import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 async function carregarMaterias() {
-  const res = await fetch("../db/materias.json");
+  const res = await fetch("materias.json");
   return res.json();
 }
 
