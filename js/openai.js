@@ -3,7 +3,7 @@ export async function gerarQuestoesIA(materia, assunto) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "Authorization": "Bearer SUA_CHAVE_OPENAI"
+      "Authorization": "Bearer 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"
     },
     body: JSON.stringify({
       model: "gpt-4o-mini",
