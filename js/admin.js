@@ -1,3 +1,4 @@
+import { gerarQuestoesIA } from "./openai.js";
 import { db } from "./firebase.js";
 import { collection, addDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
@@ -24,13 +25,17 @@ function gerarQuestaoFake(materia, assunto) {
 document.getElementById("gerar").addEventListener("click", async () => {
   const materias = await carregarMaterias();
 
-  for (const materia in materias) {
-    for (const assunto of materias[materia]) {
-      const questao = gerarQuestaoFake(materia, assunto);
+ for (const materia in materias) {
+  for (const assunto of materias[materia]) {
 
-      await addDoc(collection(db, "questoes"), questao);
+    const questoes = await gerarQuestoesIA(materia, assunto);
+
+    for (const q of questoes) {
+      await addDoc(collection(db, "questoes"), {
+        materia,
+        assunto,
+        ...q
+      });
     }
   }
-
-  alert("Questões geradas no banco!");
-});
+}
