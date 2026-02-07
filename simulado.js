@@ -1,3 +1,39 @@
+const TEMPO_MINUTOS = 10;
+let respostasUsuario = {};
+let gabarito = {};
+let materiasQuestoes = {};
+let timerInterval;
+
+function iniciarTimer() {
+  let tempo = TEMPO_MINUTOS * 60;
+  const el = document.getElementById("timer");
+
+  timerInterval = setInterval(() => {
+    let min = Math.floor(tempo / 60);
+    let seg = tempo % 60;
+    el.innerText = `Tempo restante: ${min}:${seg.toString().padStart(2, "0")}`;
+
+    if (tempo <= 0) {
+      clearInterval(timerInterval);
+      corrigirProva();
+    }
+
+    tempo--;
+  }, 1000);
+}
+
+function pegarQuestoesNaoUsadas(todas) {
+  const usadas = JSON.parse(localStorage.getItem("usadas") || "[]");
+  const novas = todas.filter(q => !usadas.includes(q.pergunta));
+
+  const escolhidas = novas.sort(() => Math.random() - 0.5).slice(0, 10);
+
+  const atualizadas = [...usadas, ...escolhidas.map(q => q.pergunta)];
+  localStorage.setItem("usadas", JSON.stringify(atualizadas));
+
+  return escolhidas;
+}
+
 async function carregarQuestoes() {
   const res = await fetch("db/questoes.json");
   const banco = await res.json();
@@ -6,28 +42,29 @@ async function carregarQuestoes() {
 
   for (let materia in banco) {
     for (let topico in banco[materia]) {
-      todas.push(...banco[materia][topico]);
+      banco[materia][topico].forEach(q => {
+        q.materia = materia;
+        todas.push(q);
+      });
     }
   }
 
-  return todas.sort(() => Math.random() - 0.5).slice(0, 10);
+  return pegarQuestoesNaoUsadas(todas);
 }
-
-let respostasUsuario = [];
-let gabarito = [];
 
 function mostrarQuestoes(questoes) {
   const div = document.getElementById("simulado");
-  div.innerHTML = "";
+  div.innerHTML = `<div id="timer"></div><hr/>`;
 
   questoes.forEach((q, i) => {
     gabarito[i] = q.correta;
+    materiasQuestoes[i] = q.materia;
 
     const bloco = document.createElement("div");
     bloco.className = "questao";
 
     bloco.innerHTML = `
-      <h3>Questão ${i + 1}</h3>
+      <h3>Questão ${i + 1} - ${q.materia}</h3>
       <p>${q.pergunta}</p>
       ${q.alternativas.map(a =>
         `<button class="alt-btn" data-q="${i}" data-alt="${a}">
@@ -57,10 +94,15 @@ function mostrarQuestoes(questoes) {
   btnFinalizar.innerText = "Finalizar Simulado";
   btnFinalizar.onclick = corrigirProva;
   div.appendChild(btnFinalizar);
+
+  iniciarTimer();
 }
 
 function corrigirProva() {
-  let pontos = 0;
+  clearInterval(timerInterval);
+
+  let total = 0;
+  let porMateria = {};
 
   document.querySelectorAll(".questao").forEach((bloco, i) => {
     const botoes = bloco.querySelectorAll(".alt-btn");
@@ -77,19 +119,28 @@ function corrigirProva() {
       }
     });
 
-    if (respostasUsuario[i] === gabarito[i]) pontos++;
+    const materia = materiasQuestoes[i];
+    if (!porMateria[materia]) porMateria[materia] = 0;
+
+    if (respostasUsuario[i] === gabarito[i]) {
+      total++;
+      porMateria[materia]++;
+    }
   });
 
-  alert(`Resultado: ${pontos} de ${gabarito.length} questões`);
+  let resumo = `Resultado Total: ${total}/10\n\nPor matéria:\n`;
+  for (let m in porMateria) {
+    resumo += `${m}: ${porMateria[m]}\n`;
+  }
 
-  const btnRefazer = document.createElement("button");
-  btnRefazer.id = "refazer";
-  btnRefazer.innerText = "Refazer Simulado";
-  btnRefazer.onclick = () => location.reload();
-
-  document.getElementById("simulado").appendChild(btnRefazer);
+  alert(resumo);
 
   document.getElementById("finalizar").remove();
+
+  const btnRefazer = document.createElement("button");
+  btnRefazer.innerText = "Novo Simulado";
+  btnRefazer.onclick = () => location.reload();
+  document.getElementById("simulado").appendChild(btnRefazer);
 }
 
 window.onload = async () => {
