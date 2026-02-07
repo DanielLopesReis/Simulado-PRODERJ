@@ -1,0 +1,16 @@
+{
+  "portugues": {
+    "interpretacao": [
+      {
+        "pergunta": "Exemplo de questão de interpretação?",
+        "alternativas": [
+          "Alternativa A",
+          "Alternativa B",
+          "Alternativa C",
+          "Alternativa D"
+        ],
+        "correta": 0
+      }
+    ]
+  }
+}
