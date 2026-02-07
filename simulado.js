@@ -24,6 +24,8 @@ function mostrarQuestoes(questoes) {
     gabarito[i] = q.correta;
 
     const bloco = document.createElement("div");
+    bloco.className = "questao";
+
     bloco.innerHTML = `
       <h3>Questão ${i + 1}</h3>
       <p>${q.pergunta}</p>
@@ -32,12 +34,11 @@ function mostrarQuestoes(questoes) {
           ${a}
         </button>`
       ).join("")}
-      <hr/>
     `;
+
     div.appendChild(bloco);
   });
 
-  // ativar cliques DEPOIS que o HTML existe
   document.querySelectorAll(".alt-btn").forEach(btn => {
     btn.addEventListener("click", () => {
       const q = btn.dataset.q;
@@ -45,14 +46,14 @@ function mostrarQuestoes(questoes) {
 
       respostasUsuario[q] = alt;
 
-      // destacar botão escolhido
       const grupo = btn.parentElement.querySelectorAll(".alt-btn");
-      grupo.forEach(b => b.style.background = "");
-      btn.style.background = "#cce5ff";
+      grupo.forEach(b => b.classList.remove("selecionada"));
+      btn.classList.add("selecionada");
     });
   });
 
   const btnFinalizar = document.createElement("button");
+  btnFinalizar.id = "finalizar";
   btnFinalizar.innerText = "Finalizar Simulado";
   btnFinalizar.onclick = corrigirProva;
   div.appendChild(btnFinalizar);
@@ -61,11 +62,34 @@ function mostrarQuestoes(questoes) {
 function corrigirProva() {
   let pontos = 0;
 
-  respostasUsuario.forEach((resp, i) => {
-    if (resp === gabarito[i]) pontos++;
+  document.querySelectorAll(".questao").forEach((bloco, i) => {
+    const botoes = bloco.querySelectorAll(".alt-btn");
+
+    botoes.forEach(btn => {
+      const alt = btn.dataset.alt;
+
+      if (alt === gabarito[i]) {
+        btn.classList.add("correta");
+      }
+
+      if (respostasUsuario[i] === alt && alt !== gabarito[i]) {
+        btn.classList.add("errada");
+      }
+    });
+
+    if (respostasUsuario[i] === gabarito[i]) pontos++;
   });
 
-  alert(`Você acertou ${pontos} de ${gabarito.length} questões!`);
+  alert(`Resultado: ${pontos} de ${gabarito.length} questões`);
+
+  const btnRefazer = document.createElement("button");
+  btnRefazer.id = "refazer";
+  btnRefazer.innerText = "Refazer Simulado";
+  btnRefazer.onclick = () => location.reload();
+
+  document.getElementById("simulado").appendChild(btnRefazer);
+
+  document.getElementById("finalizar").remove();
 }
 
 window.onload = async () => {
