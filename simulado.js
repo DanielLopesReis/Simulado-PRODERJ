@@ -1,4 +1,5 @@
-const TEMPO_MINUTOS = 10;
+const TEMPO_MINUTOS = 240;
+
 let respostasUsuario = {};
 let gabarito = {};
 let materiasQuestoes = {};
@@ -9,9 +10,14 @@ function iniciarTimer() {
   const el = document.getElementById("timer");
 
   timerInterval = setInterval(() => {
-    let min = Math.floor(tempo / 60);
-    let seg = tempo % 60;
-    el.innerText = `Tempo restante: ${min}:${seg.toString().padStart(2, "0")}`;
+    let h = Math.floor(tempo / 3600);
+    let m = Math.floor((tempo % 3600) / 60);
+    let s = tempo % 60;
+
+    el.innerText =
+      `Tempo restante: ${h}h ${m.toString().padStart(2, "0")}m ${s
+        .toString()
+        .padStart(2, "0")}s`;
 
     if (tempo <= 0) {
       clearInterval(timerInterval);
@@ -57,7 +63,8 @@ function mostrarQuestoes(questoes) {
   div.innerHTML = `<div id="timer"></div><hr/>`;
 
   questoes.forEach((q, i) => {
-    gabarito[i] = q.correta;
+    // gabarito = PRIMEIRA alternativa (padrão do seu gerador)
+    gabarito[i] = q.alternativas[0];
     materiasQuestoes[i] = q.materia;
 
     const bloco = document.createElement("div");
@@ -71,6 +78,7 @@ function mostrarQuestoes(questoes) {
           ${a}
         </button>`
       ).join("")}
+      <hr/>
     `;
 
     div.appendChild(bloco);
@@ -134,16 +142,6 @@ function corrigirProva() {
   }
 
   alert(resumo);
-
-  document.getElementById("finalizar").remove();
-
-  const btnRefazer = document.createElement("button");
-  btnRefazer.innerText = "Novo Simulado";
-  btnRefazer.onclick = () => location.reload();
-  document.getElementById("simulado").appendChild(btnRefazer);
 }
 
-window.onload = async () => {
-  const questoes = await carregarQuestoes();
-  mostrarQuestoes(questoes);
-};
+window.onloa
