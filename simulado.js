@@ -27,27 +27,35 @@ function mostrarQuestoes(questoes) {
     bloco.innerHTML = `
       <h3>Questão ${i + 1}</h3>
       <p>${q.pergunta}</p>
-      ${q.alternativas.map((a, idx) =>
-        `<button onclick="responder(${i}, '${a}', this)">${a}</button>`
+      ${q.alternativas.map(a =>
+        `<button class="alt-btn" data-q="${i}" data-alt="${a}">
+          ${a}
+        </button>`
       ).join("")}
       <hr/>
     `;
     div.appendChild(bloco);
   });
 
+  // ativar cliques DEPOIS que o HTML existe
+  document.querySelectorAll(".alt-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const q = btn.dataset.q;
+      const alt = btn.dataset.alt;
+
+      respostasUsuario[q] = alt;
+
+      // destacar botão escolhido
+      const grupo = btn.parentElement.querySelectorAll(".alt-btn");
+      grupo.forEach(b => b.style.background = "");
+      btn.style.background = "#cce5ff";
+    });
+  });
+
   const btnFinalizar = document.createElement("button");
   btnFinalizar.innerText = "Finalizar Simulado";
   btnFinalizar.onclick = corrigirProva;
   div.appendChild(btnFinalizar);
-}
-
-function responder(numero, alternativa, botao) {
-  respostasUsuario[numero] = alternativa;
-
-  // destacar botão escolhido
-  const botoes = botao.parentElement.querySelectorAll("button");
-  botoes.forEach(b => b.style.background = "");
-  botao.style.background = "#cce5ff";
 }
 
 function corrigirProva() {
