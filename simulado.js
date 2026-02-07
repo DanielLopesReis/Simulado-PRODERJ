@@ -22,10 +22,25 @@ function mostrarQuestoes(questoes) {
     bloco.innerHTML = `
       <h3>Questão ${i + 1}</h3>
       <p>${q.pergunta}</p>
-      ${q.alternativas.map(a => `<button>${a}</button>`).join("")}
+      ${q.alternativas
+        .map(a => `<button onclick="responder(this, '${q.correta}')">${a}</button>`)
+        .join("")}
       <hr/>
     `;
     div.appendChild(bloco);
+  });
+}
+
+function responder(botao, correta) {
+  const botoes = botao.parentElement.querySelectorAll("button");
+
+  botoes.forEach(b => {
+    b.disabled = true;
+    if (b.innerText === correta) {
+      b.style.backgroundColor = "#4CAF50"; // verde
+    } else {
+      b.style.backgroundColor = "#f44336"; // vermelho
+    }
   });
 }
 
