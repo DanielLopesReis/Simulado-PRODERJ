@@ -1,0 +1,64 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f4f6f8;
+  margin: 0;
+  padding: 20px;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+  background: white;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+h1 {
+  text-align: center;
+}
+
+.questao {
+  margin-bottom: 25px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.alt-btn {
+  display: block;
+  margin: 6px 0;
+  padding: 8px;
+  width: 100%;
+  cursor: pointer;
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  background: #fafafa;
+  transition: 0.2s;
+}
+
+.alt-btn:hover {
+  background: #e9ecef;
+}
+
+.selecionada {
+  background: #cce5ff !important;
+  border-color: #339af0;
+}
+
+.correta {
+  background: #d4edda !important;
+  border-color: #28a745;
+}
+
+.errada {
+  background: #f8d7da !important;
+  border-color: #dc3545;
+}
+
+#finalizar, #refazer {
+  margin-top: 20px;
+  padding: 10px 15px;
+  font-size: 16px;
+  cursor: pointer;
+}
