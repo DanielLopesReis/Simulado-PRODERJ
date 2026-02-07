@@ -1,15 +1,27 @@
 {
-  "portugues": {
-    "interpretacao": [
+  "Português": {
+    "Interpretação": [
       {
-        "pergunta": "Exemplo de questão de interpretação?",
+        "pergunta": "O texto tem como objetivo principal:",
         "alternativas": [
-          "Alternativa A",
-          "Alternativa B",
-          "Alternativa C",
-          "Alternativa D"
-        ],
-        "correta": 0
+          "Informar",
+          "Narrar",
+          "Descrever",
+          "Argumentar"
+        ]
+      }
+    ]
+  },
+  "Informática": {
+    "Conceitos": [
+      {
+        "pergunta": "O que é um sistema operacional?",
+        "alternativas": [
+          "Programa que gerencia o hardware",
+          "Um antivírus",
+          "Um editor de texto",
+          "Um navegador"
+        ]
       }
     ]
   }
