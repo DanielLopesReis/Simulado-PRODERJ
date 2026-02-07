@@ -8,26 +8,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
+      - name: Baixar repositório
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Instalar Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Instalar dependencias
-        run: npm install node-fetch
+      - name: Instalar OpenAI SDK
+        run: npm install openai
 
-      - name: Gerar Questoes
+      - name: Rodar script
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
         run: node gerarQuestoes.js
 
-      - name: Commit questoes
+      - name: Commitar questoes.json
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "actions@github.com"
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
           git add questoes.json
-          git commit -m "Banco de questoes atualizado" || echo "Sem mudanças"
+          git commit -m "Banco de questões atualizado" || echo "Nada para commitar"
           git push
