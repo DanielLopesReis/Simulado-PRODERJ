@@ -7,40 +7,31 @@ async function gerar(materia, assunto) {
     throw new Error("OPENAI_KEY não encontrada no ambiente!");
   }
 
-  const res = await fetch("https://api.openai.com/v1/chat/completions", {
+  const res = await fetch("https://api.openai.com/v1/responses", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       "Authorization": `Bearer ${process.env.OPENAI_KEY}`
     },
     body: JSON.stringify({
-      model: "gpt-4o-mini",
-      messages: [{
-        role: "user",
-        content: `
+      model: "gpt-4.1-mini",
+      input: `
 Gere 5 questões de múltipla escolha para concurso Técnico de Suporte PRODERJ.
 Matéria: ${materia}
 Assunto: ${assunto}
 
-Responda SOMENTE com JSON válido, sem texto antes ou depois:
+Responda SOMENTE com JSON válido:
 
 [
  { "enunciado": "...", "alternativas": ["A) ...","B) ...","C) ...","D) ..."], "correta": "A" }
 ]`
-      }]
     })
   });
 
   const data = await res.json();
 
-  if (!data.choices) {
-    console.log(data);
-    throw new Error("Resposta inesperada da OpenAI");
-  }
+  const texto = data.output[0].content[0].text;
 
-  const texto = data.choices[0].message.content;
-
-  // Extrai apenas o JSON do meio do texto
   const jsonMatch = texto.match(/\[[\s\S]*\]/);
 
   if (!jsonMatch) {
