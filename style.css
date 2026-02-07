@@ -62,3 +62,9 @@ h1 {
   font-size: 16px;
   cursor: pointer;
 }
+#timer {
+  font-size: 18px;
+  font-weight: bold;
+  text-align: right;
+  margin-bottom: 10px;
+}
