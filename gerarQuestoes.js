@@ -30,12 +30,13 @@ Responda SOMENTE com JSON válido:
 
   const data = await res.json();
 
-  const texto = data.output[0].content[0].text;
+  // 🔥 pega o texto correto independente do formato
+  const texto = data.output_text || JSON.stringify(data);
 
   const jsonMatch = texto.match(/\[[\s\S]*\]/);
 
   if (!jsonMatch) {
-    console.log(texto);
+    console.log("Resposta da OpenAI:", texto);
     throw new Error("JSON não encontrado na resposta");
   }
 
